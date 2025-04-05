@@ -59,7 +59,9 @@ function Quiz() {
           {decodeHtml(currentQuestion.question)}
         </p>
         <div className="space-y-4">
-          {currentQuestion.answers.map((answer, index) => (
+          {[...currentQuestion.answers]
+          .sort(() => Math.random() - 0.5) // Shuffle the answers
+          .map((answer, index) => (
             <button
               key={index}
               onClick={() => setSelected(answer)}
