@@ -1,0 +1,8 @@
+.quiz-background {
+    background: linear-gradient(135deg, #ff7eb3, #ff758c, #ff6a5e);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+  }
