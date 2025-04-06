@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import './style.css';
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function Quiz() {
   const location = useLocation();
@@ -12,80 +11,78 @@ function Quiz() {
 
   const decodeHtml = (html) => {
     const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
+    const doc = parser.parseFromString(html, "text/html");
     return doc.documentElement.textContent;
   };
 
   useEffect(() => {
     if (!questions || questions.length === 0) {
-      navigate('/'); // Redirect to home if no questions are available
+      navigate("/");
     }
   }, [questions, navigate]);
 
   if (!questions || questions.length === 0) {
-    return <p>Loading questions...</p>; // Handle empty questions gracefully
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 to-purple-200 text-xl font-semibold text-indigo-700">
+        Loading questions...
+      </div>
+    );
   }
 
   const currentQuestion = questions[currentQuestionIndex];
 
   const handleNext = () => {
-    // Update the current question with the selected answer
     const updatedQuestions = [...questions];
     updatedQuestions[currentQuestionIndex] = {
       ...currentQuestion,
       selected_answer: selected,
     };
 
-    setQuestions(updatedQuestions); // Update the questions array
+    setQuestions(updatedQuestions);
 
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelected(null); // Reset selected answer for the next question
+      setSelected(null);
     } else {
-      navigate('/result', { state: { questions: updatedQuestions } }); // Pass updated questions to the result page
+      navigate("/result", { state: { questions: updatedQuestions } });
     }
   };
-  useEffect(() => {
-    console.log('Updated questions:', questions);
-  }, [questions]);
-  
+
   return (
-    <div className="quiz-background">
-      <div className="max-w-2xl mx-auto p-6 bg-white rounded-2xl mt-10 min-w-100">
-        <h2 className="text-2xl font-bold text-center text-indigo-600 mb-4">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-purple-200 flex items-center justify-center px-4 py-12">
+      <div className="bg-white shadow-2xl rounded-3xl max-w-3xl w-full p-8 md:p-10 animate-fade-in">
+        <h2 className="text-2xl md:text-3xl font-bold text-indigo-700 text-center mb-4">
           Question {currentQuestionIndex + 1} of {questions.length}
         </h2>
-        <p className="text-gray-700 text-lg mb-6 text-center">
+        <p className="text-gray-700 text-lg text-center mb-6">
           {decodeHtml(currentQuestion.question)}
         </p>
         <div className="space-y-4">
-          {[...currentQuestion.answers]
-          .sort(() => Math.random() - 0.5) // Shuffle the answers
-          .map((answer, index) => (
+          {currentQuestion.answers.map((answer, index) => (
             <button
               key={index}
               onClick={() => setSelected(answer)}
-              className={`block w-full px-4 py-2 text-left rounded-lg border ${
+              className={`w-full px-5 py-3 rounded-xl border transition-all duration-300 ease-in-out transform text-left text-base font-medium shadow-sm ${
                 selected === answer
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-gray-100 text-gray-800'
-              } hover:bg-indigo-100`}
+                  ? "bg-indigo-600 text-white scale-105"
+                  : "bg-gray-100 text-gray-800 hover:bg-indigo-100 hover:scale-105"
+              }`}
             >
               {decodeHtml(answer)}
             </button>
           ))}
         </div>
-        <div className="mt-6 text-center">
+        <div className="mt-8 text-center">
           <button
             onClick={handleNext}
-            disabled={!selected} // Disable until an answer is selected
-            className={`px-6 py-2 rounded-xl font-semibold ${
+            disabled={!selected}
+            className={`px-8 py-3 rounded-xl font-semibold text-lg transition duration-300 transform ${
               selected
-                ? 'bg-indigo-600 text-white hover:bg-indigo-700'
-                : 'bg-gray-400 text-gray-200 cursor-not-allowed'
-            } transition duration-300`}
+                ? "bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-105"
+                : "bg-gray-400 text-gray-200 cursor-not-allowed"
+            }`}
           >
-            {currentQuestionIndex < questions.length - 1 ? 'Next' : 'Finish'}
+            {currentQuestionIndex < questions.length - 1 ? "Next" : "Finish"}
           </button>
         </div>
       </div>
